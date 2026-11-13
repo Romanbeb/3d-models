@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D-Модели — печать на заказ | Школа №65</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:Arial,sans-serif;background:#f4f4f8;color:#222}a{text-decoration:none;color:inherit}
+header{background:#1a1a2e;color:#fff;padding:12px 20px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.menu{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{font-size:1.3rem;font-weight:bold;color:#ff9800}.menu nav{display:flex;gap:14px;flex-wrap:wrap}
+.menu nav a{color:#fff;font-size:.9rem;padding:6px 8px;border-radius:6px}.menu nav a:hover{background:#2d2d4e}
+.menu .phone-link{font-weight:bold;color:#ff9800;border:2px solid #ff9800;border-radius:8px;padding:6px 12px}
+.menu .phone-link:hover{background:#ff9800;color:#1a1a2e}
+.cart-link{font-weight:bold;color:#fff;padding:6px 10px;border-radius:6px;cursor:pointer}.cart-link:hover{background:#2d2d4e}
+.cart-count{background:#ff9800;color:#1a1a2e;border-radius:10px;font-size:.75rem;padding:1px 7px;margin-left:4px}
+.auth-box{display:flex;align-items:center;gap:8px}.auth-btn{background:#4caf50;color:#fff;font-weight:bold;border:none;border-radius:8px;padding:7px 14px;cursor:pointer}.auth-btn:hover{background:#43a047}
+.auth-btn.out{background:#555}.auth-user{color:#ffac33;font-weight:bold;font-size:.9rem}
+.ticker{background:#ff9800;color:#1a1a2e;font-weight:bold;padding:8px 0;overflow:hidden;white-space:nowrap}
+.ticker span{display:inline-block;animation:tick 20s linear infinite;padding-left:100%}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+.btn{display:inline-block;background:#ff9800;color:#1a1a2e;font-weight:bold;font-size:1.1rem;padding:14px 34px;border:none;border-radius:10px;cursor:pointer;transition:.2s}
+.btn:hover{background:#ffac33;transform:scale(1.04)}
+.btn-pulse{animation:pulse 2s infinite}@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,152,0,.5)}50%{box-shadow:0 0 0 12px rgba(255,152,0,0)}}
+.btn-max{display:inline-block;background:#1a1a2e;color:#ff9800;font-weight:bold;padding:12px 28px;border-radius:10px}.btn-max:hover{background:#2d2d4e}
+.btn-secondary{background:#1a1a2e;color:#fff}.btn-secondary:hover{background:#2d2d4e}
+.tip-btn.active{background:#4caf50;color:#fff}
+.hero{max-width:1100px;margin:30px auto;padding:50px 20px;background:linear-gradient(135deg,#1a1a2e,#2d2d6e);border-radius:16px;color:#fff;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:"🖨";position:absolute;font-size:10rem;opacity:.08;right:-20px;top:-30px}
+.hero h1{font-size:2.3rem;margin-bottom:14px}.hero p{font-size:1.15rem;line-height:1.6;max-width:700px;margin:0 auto 24px}
+.school-tag{display:inline-block;background:rgba(255,152,0,.15);border:1px solid #ff9800;color:#ffac33;border-radius:20px;padding:6px 16px;font-size:.95rem;margin-bottom:16px}
+section{max-width:1100px;margin:45px auto;padding:0 20px}section h2{font-size:1.8rem;margin-bottom:22px;text-align:center}
+.section-sub{text-align:center;color:#777;margin:-14px 0 24px}
+.max-block{max-width:1100px;margin:25px auto;padding:26px 20px;text-align:center;background:#fff;border:2px dashed #ff9800;border-radius:14px}
+.max-block p{color:#555;margin-bottom:16px;line-height:1.5}
+.stats{max-width:1100px;margin:40px auto;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;text-align:center}
+.stat{background:#fff;border-radius:14px;padding:24px 10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.stat b{display:block;font-size:1.6rem;color:#e65100}.stat span{color:#666;font-size:.95rem}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.step{background:#fff;border-radius:14px;padding:24px 18px;box-shadow:0 2px 8px rgba(0,0,0,.08);text-align:center}
+.step .num{width:44px;height:44px;background:#ff9800;color:#1a1a2e;font-weight:bold;font-size:1.3rem;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.search-wrap{max-width:500px;margin:0 auto 20px}.search-wrap input{width:100%;padding:14px 18px;border:2px solid #ddd;border-radius:26px;font-size:1rem;font-family:inherit}
+.search-wrap input:focus{outline:none;border-color:#ff9800}
+.search-hint{text-align:center;color:#999;font-size:.9rem;margin-top:-10px;margin-bottom:20px}
+.sort-bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.sort-btn{background:#fff;border:2px solid #ddd;border-radius:20px;padding:8px 18px;font-size:.95rem;font-weight:bold;cursor:pointer}
+.sort-btn.active,.sort-btn:hover{border-color:#ff9800;background:#fff3e0;color:#e65100}
+.catalog{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
+.card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.1);display:flex;flex-direction:column;transition:.2s;position:relative;cursor:pointer}
+.card:hover{transform:translateY(-6px);box-shadow:0 8px 20px rgba(0,0,0,.18)}
+.card.dim{-webkit-mask-image:linear-gradient(to bottom,black 25%,transparent 100%);mask-image:linear-gradient(to bottom,black 25%,transparent 100%);pointer-events:none}
+.badge{position:absolute;top:0;left:0;background:#e65100;color:#fff;font-size:.75rem;font-weight:bold;padding:4px 10px;border-radius:0 0 8px 0;z-index:2}
+.badge.sale{background:#d32f2f}
+.card .photo{height:180px;background:#dcdcdc;display:flex;align-items:center;justify-content:center;font-size:3.5rem;color:#999;background-size:cover;background-position:center}
+.card .info{padding:14px;flex:1;display:flex;flex-direction:column;gap:6px}
+.card h3{font-size:1.1rem}.card .weight{color:#888;font-size:.85rem}
+.price-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.price{font-weight:bold;color:#e65100;font-size:1.2rem}.price-note{color:#aaa;font-size:.78rem}
+.old-price{color:#999;text-decoration:line-through;font-size:.95rem}
+.discount{color:#d32f2f;font-weight:bold;font-size:.85rem;background:#ffebee;border-radius:6px;padding:2px 6px}
+.card .btn{width:100%;text-align:center;padding:10px;font-size:1rem;margin-top:auto}
+.more-wrap{text-align:center;margin-top:26px}
+.more-btn{background:#1a1a2e;color:#ff9800;font-weight:bold;font-size:1.05rem;padding:12px 30px;border:none;border-radius:24px;cursor:pointer}
+.more-btn:hover{background:#2d2d4e}.more-hint{color:#888;font-size:.9rem;margin-top:8px}
+.no-results{grid-column:1/-1;text-align:center;color:#888;padding:30px 0}
+.page-box{display:none;background:#fff;border-radius:16px;padding:30px;max-width:800px;margin:0 auto;box-shadow:0 3px 12px rgba(0,0,0,.12)}
+.page-box h2{text-align:left;margin-bottom:16px}
+.big-photo{flex:0 0 260px;height:260px;background:#dcdcdc;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:6rem;color:#999;background-size:cover;background-position:center}
+.model-detail .price-row{margin:10px 0}.model-detail .price{font-size:1.7rem}.model-detail .old-price{font-size:1.2rem}
+.model-detail .discount{border-radius:8px;padding:4px 10px}
+.model-detail .weight{color:#888;margin-bottom:10px}.model-detail .desc{line-height:1.6;color:#444;margin-bottom:16px}
+.hint{color:#999;font-size:.9rem;margin-bottom:16px}
+.small-warn{background:#fff8e1;border:2px solid #ffb300;border-radius:10px;padding:12px 14px;font-size:.9rem;color:#6d4c00;margin-bottom:16px;line-height:1.5}
+.back-link{display:inline-block;color:#888;cursor:pointer;margin-bottom:6px;font-size:.95rem}.back-link:hover{color:#e65100}
+.order-product{background:#fff3e0;border-radius:10px;padding:12px 16px;font-weight:bold;margin-bottom:20px}
+.speed-variant{display:block;background:#f4f4f8;border:2px solid #ddd;border-radius:10px;padding:12px 16px;margin-bottom:10px;cursor:pointer}
+.speed-variant:hover{border-color:#ff9800}.speed-variant:has(input:checked){border-color:#ff9800;background:#fff3e0}
+.speed-variant input{margin-right:10px}.speed-variant b{font-size:1.05rem}
+.speed-variant small{display:block;color:#777;margin-top:4px;font-weight:normal}
+.speed-note{color:#777;font-size:.9rem;margin:8px 0 20px}
+.group-title{display:block;font-weight:bold;margin:20px 0 10px}
+.fast-warn{display:none;background:#ffebee;border:2px solid #d32f2f;border-radius:10px;padding:12px 14px;font-size:.9rem;color:#b71c1c;margin:10px 0 16px;line-height:1.5}
+.fast-warn.show{display:block}
+label.f-label{display:block;font-weight:bold;margin:14px 0 6px}
+input[type="text"],input[type="tel"],input[type="email"],input[type="password"],textarea{width:100%;padding:12px;border:2px solid #ddd;border-radius:10px;font-size:1rem;font-family:inherit}
+input:focus,textarea:focus{outline:none;border-color:#ff9800}
+.total-box{background:#fff3e0;border:2px solid #ff9800;border-radius:12px;padding:16px;margin-top:20px}
+.total-box .line{display:flex;justify-content:space-between;padding:3px 0;color:#555;font-size:.95rem}
+.total-box .line.total{border-top:2px dashed #ff9800;margin-top:8px;padding-top:10px;color:#1a1a2e;font-weight:bold;font-size:1.15rem}
+.order-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}.order-actions .btn{flex:1;min-width:180px;text-align:center;padding:14px}
+.cart-item{background:#f8f8fb;border:2px solid #eee;border-radius:12px;padding:14px 16px;margin-bottom:12px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.ci-info{flex:1;min-width:200px}.ci-info b{display:block;font-size:1.05rem}.ci-info small{color:#777}
+.ci-price{font-weight:bold;color:#e65100;font-size:1.15rem;white-space:nowrap}
+.ci-del{background:none;border:none;color:#d32f2f;font-size:1.2rem;cursor:pointer;padding:6px}
+.promo-row{display:flex;gap:10px;margin:18px 0;flex-wrap:wrap}.promo-row input{flex:1;min-width:180px;padding:12px;border:2px solid #ddd;border-radius:10px;font-size:1rem;font-family:inherit}
+.promo-status{font-size:.9rem;margin:-8px 0 14px;font-weight:bold}.promo-status.ok{color:#2e7d32}.promo-status.bad{color:#d32f2f}
+.cart-empty{text-align:center;color:#888;padding:30px 0}
+.tip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tip-row .tip-btn{background:#1a1a2e;color:#fff;font-weight:bold;border:none;border-radius:8px;padding:8px 14px;cursor:pointer}
+.tip-row .tip-btn:hover{background:#2d2d4e}.tip-row .tip-btn.active{background:#4caf50}
+.pay-btn{width:100%;margin-top:20px;background:#ff9800;color:#1a1a2e;font-weight:bold;font-size:1.2rem;padding:16px;border:none;border-radius:10px;cursor:pointer}
+.pay-btn:hover{background:#ffac33}
+#after-order,#after-suggest{display:none;background:#e8f5e9;border:2px solid #4caf50;border-radius:16px;padding:26px;max-width:700px;margin:20px auto 0}
+#after-order h2,#after-suggest h2{text-align:left;margin-bottom:16px;font-size:1.5rem}
+.next-step{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.next-step .n{flex-shrink:0;width:30px;height:30px;background:#4caf50;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}
+.next-step p{line-height:1.5;color:#333}
+.reviews{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.review{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.review .stars{color:#ffb300;font-size:1.1rem;margin-bottom:8px}.review .stars.empty{color:#ccc}
+.review .text{font-style:italic;color:#444;line-height:1.5}.review .author{margin-top:12px;font-weight:bold;color:#1a1a2e;font-style:normal}
+.review-form,.suggest-form{background:#fff;border-radius:14px;padding:20px;margin-top:24px;box-shadow:0 2px 8px rgba(0,0,0,.08);max-width:500px;margin-left:auto;margin-right:auto}
+.review-form h3,.suggest-form h3{margin-bottom:12px}
+.star-input{display:flex;gap:6px;margin:8px 0 14px}.star-input button{font-size:1.6rem;background:none;border:none;cursor:pointer;color:#ddd}
+.star-input button.on{color:#ffb300}
+.review-more-wrap{text-align:center;margin-top:22px}
+.faq details{background:#fff;border-radius:12px;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.06);overflow:hidden}
+.faq summary{padding:16px 20px;font-weight:bold;cursor:pointer;list-style:none;position:relative;padding-right:50px}
+.faq summary::after{content:"+";position:absolute;right:20px;font-size:1.4rem;color:#ff9800;transition:.2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq .answer{padding:0 20px 16px;color:#555;line-height:1.6}
+.about p{line-height:1.7;margin-bottom:14px;font-size:1.05rem}
+.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:20px}
+.feature{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.08)}.feature h3{margin-bottom:8px;color:#1a1a2e}
+.feature p{font-size:.95rem;line-height:1.5}
+.suggest-ideas{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:20px}
+.idea-card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.08)}.idea-card p{font-size:.95rem;color:#555;line-height:1.5}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center;padding:16px}
+.modal.open{display:flex}
+.modal-box{background:#fff;border-radius:16px;padding:26px;max-width:420px;width:100%;max-height:90vh;overflow:auto}
+.modal-box h3{margin-bottom:6px}.modal-sub{color:#777;font-size:.9rem;margin-bottom:14px;line-height:1.4}
+.modal-tabs{display:flex;gap:8px;margin-bottom:16px}
+.modal-tab{flex:1;padding:10px;border:2px solid #ddd;border-radius:10px;background:#fff;font-weight:bold;cursor:pointer;text-align:center}
+.modal-tab.active{border-color:#ff9800;background:#fff3e0;color:#e65100}
+.err{color:#d32f2f;font-size:.9rem;font-weight:bold;margin:8px 0;min-height:1.2em}
+.modal-actions{display:flex;gap:10px;margin-top:14px}.modal-actions .btn{flex:1;text-align:center;padding:12px;font-size:1rem}
+.nickname-locked{background:#f4f4f8;border:2px solid #ddd;border-radius:10px;padding:12px;font-weight:bold;color:#555;display:flex;justify-content:space-between;align-items:center}
+.nickname-locked small{color:#999;font-weight:normal}
+footer{background:#1a1a2e;color:#ccc;text-align:center;padding:24px 20px;margin-top:50px}footer a{color:#ff9800;font-weight:bold}
+.call-fab{position:fixed;bottom:20px;right:20px;width:58px;height:58px;background:#4caf50;color:#fff;border-radius:50%;font-size:1.6rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.3);z-index:200;animation:pulse 2.5s infinite}
+@media(max-width:600px){.menu{justify-content:center}.hero h1{font-size:1.6rem}.page-box{padding:20px}.big-photo{flex:1 1 100%;height:220px;font-size:5rem}.call-fab{bottom:14px;right:14px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="menu">
+    <span class="logo">🖨 3D МОДЕЛИ</span>
+    <nav>
+      <a href="#home">Главная</a><a href="#catalog">Каталог</a><a href="#reviews">Отзывы</a>
+      <a href="#faq">Вопросы</a><a href="#suggest">Предложить модель</a><a href="#contacts">Контакты</a>
+    </nav>
+    <a class="cart-link" onclick="openCart()">🛒 Корзина<span class="cart-count" id="cart-count" style="display:none;">0</span></a>
+    <span class="auth-box">
+      <span id="auth-user-label" class="auth-user" style="display:none;"></span>
+      <button class="auth-btn" id="auth-btn" onclick="openAuth()">Войти</button>
+      <button class="auth-btn out" id="auth-out" style="display:none;" onclick="logout()">Выйти</button>
+    </span>
+    <a class="phone-link" href="tel:+79615965566">📞 +7 961 596 55 66</a>
+  </div>
+</header>
+
+<div class="ticker"><span>🔥 ПЕЧАТАЕМ САМИ · 🎒 ЗАБРАТЬ МОЖНО У ШКОЛЫ №65 · 🚚 КУРЬЕР 100 ₽ · 🎨 БЕЛЫЙ И РАДУЖНЫЙ ПЛАСТИК · 🛒 КОРЗИНА И ПРОМОКОДЫ · 👤 РЕГИСТРАЦИЯ С ПАРОЛЕМ · ⚡ ГОТОВО ДО СЛЕДУЮЩЕГО РАБОЧЕГО ДНЯ · 🔥 ПЕЧАТАЕМ САМИ · 🎒 ЗАБРАТЬ МОЖНО У ШКОЛЫ №65 · 🚚 КУРЬЕР 100 ₽ · 🎨 БЕЛЫЙ И РАДУЖНЫЙ ПЛАСТИК · 🛒 КОРЗИНА И ПРОМОКОДЫ · 👤 РЕГИСТРАЦИЯ С ПАРОЛЕМ · ⚡ ГОТОВО ДО СЛЕДУЮЩЕГО РАБОЧЕГО ДНЯ · </span></div>
+
+<div class="hero" id="home">
+  <div class="school-tag">🏫 Работаем при школе №65</div>
+  <h1>3D-модели, которых больше нигде нет</h1>
+  <p>Фигурки, аксессуары и модели на заказ — печатаем сами на своём 3D-принтере.
+     Регистрируйся с паролем, набирай корзину, оставляй отзывы под своим ником.
+     Забираешь у школы №65 или заказываешь курьера.</p>
+  <a class="btn btn-pulse" href="#catalog">Перейти в каталог</a>
+</div>
+
+<div class="max-block">
+  <h3>💬 Вступай в нашу группу в MAX!</h3>
+  <p>Там мы сообщаем обо всём: новые модели, скидки, промокоды, статусы заказов.</p>
+  <a class="btn-max" href="https://max.ru/join/Wza9NxAlynErloEqHFd30Bj4kgLXc-_XqNQD0vYl_Rk">Вступить в группу 👋</a>
+</div>
+
+<div class="stats">
+  <div class="stat"><b>100+</b><span>моделей напечатано</span></div>
+  <div class="stat" id="sold-stat"><b>—</b><span>продано моделей</span></div>
+  <div class="stat"><b>2</b><span>вида пластика</span></div>
+  <div class="stat"><b>100%</b><span>проверка перед передачей</span></div>
+</div>
+
+<section id="catalog">
+  <h2>Каталог моделей</h2>
+  <p class="section-sub">Цена — за белый пластик, обычная скорость. В заказе посчитаем точно.</p>
+  <div class="search-wrap"><input type="text" id="catalog-search" placeholder="Поиск модели (например: снеговик)" oninput="renderCatalog()"></div>
+  <p class="search-hint">Опечатался? Ничего страшного — найдём почти по любому написанию 🙂</p>
+  <div class="sort-bar">
+    <button class="sort-btn active" data-sort="default" onclick="setSort('default', this)">Все модели</button>
+    <button class="sort-btn" data-sort="new" onclick="setSort('new', this)">🆕 Новинки</button>
+    <button class="sort-btn" data-sort="hits" onclick="setSort('hits', this)">🔥 Часто покупают</button>
+  </div>
+  <div class="catalog" id="catalog-grid"></div>
+  <div class="more-wrap">
+    <button class="more-btn" id="more-catalog" onclick="showMoreCatalog()">↓ Показать ещё модели</button>
+    <div class="more-hint" id="catalog-counter"></div>
+  </div>
+</section>
+
+<section id="model-page" class="page-box">
+  <span class="back-link" onclick="closeModel()">← Назад к каталогу</span>
+  <h2 id="model-title">Модель</h2>
+  <div class="model-detail" style="display:flex;gap:24px;flex-wrap:wrap;">
+    <div class="big-photo" id="model-photo"></div>
+    <div class="details" style="flex:1;min-width:240px;">
+      <div class="price-row" id="model-price-row"></div>
+      <div class="weight" id="model-weight"></div>
+      <div class="desc" id="model-desc"></div>
+      <div class="small-warn" id="model-small-warn">⚠️ <b>ВАЖНО!</b> Мелкие модели (свисток, брелоки и похожие) лучше печатать на <b>обычной или медленной</b> скорости: на быстрой может получиться брак или очень плохое качество.</div>
+      <button class="btn" id="model-buy-btn">Купить</button>
+    </div>
+  </div>
+</section>
+
+<section id="order-page" class="page-box" style="max-width:700px;">
+  <h2>Настрой заказа</h2>
+  <div class="order-product" id="order-product-name">Модель: —</div>
+  <form id="order-form">
+    <span class="group-title">Цвет пластика:</span>
+    <div id="color-block"></div>
+    <p class="speed-note">Радужный пластик красивее, но дороже — цена считается за каждый грамм модели.</p>
+    <span class="group-title">Скорость печати:</span>
+    <div id="speed-block"></div>
+    <div class="fast-warn" id="fast-warn">⚠️ <b>ВАЖНО!</b> Эта модель маленькая — на быстрой скорости может получиться брак или очень плохое качество. Рекомендуем обычную или медленную.</div>
+    <p class="speed-note">Обычная — 100% скорости принтера. Медленная — 50%: вдвое дольше, детализация чётче (+40%). Быстрая — 200%: вдвое быстрее, детали проще (−20%). Любая скорость — готово <b>до следующего рабочего дня</b>.</p>
+    <div class="total-box" id="total-box"></div>
+    <div class="order-actions">
+      <button type="submit" class="btn">🛒 Добавить в корзину</button>
+      <button type="button" class="btn btn-secondary" onclick="openCart()">Перейти в корзину</button>
+    </div>
+  </form>
+</section>
+
+<section id="cart-page" class="page-box">
+  <span class="back-link" onclick="closeCart()">← Назад в каталог</span>
+  <h2>🛒 Корзина</h2>
+  <div id="cart-items"></div>
+  <div id="cart-checkout" style="display:none;">
+    <span class="group-title">Промокод:</span>
+    <div class="promo-row">
+      <input type="text" id="promo-input" placeholder="Введи промокод (например, из группы в MAX)" oninput="updateCart()">
+      <button type="button" class="btn btn-secondary" onclick="applyPromoBtn()">Применить</button>
+    </div>
+    <div class="promo-status" id="promo-status"></div>
+    <span class="group-title">Как получишь модели:</span>
+    <label class="speed-variant"><input type="radio" name="pickup" value="Заберу у школы №65 (бесплатно)" checked onchange="updateCart()"><b>Заберу у школы №65 — бесплатно</b></label>
+    <label class="speed-variant"><input type="radio" name="pickup" value="Курьер (100 ₽)" onchange="updateCart()"><b>Курьер — 100 ₽</b><small>Возим только в районах рядом со школой №65</small></label>
+    <span class="group-title">Чаевые (по желанию):</span>
+    <div class="tip-row">
+      <button type="button" class="tip-btn" onclick="setTip(10)">10 ₽</button>
+      <button type="button" class="tip-btn" onclick="setTip(20)">20 ₽</button>
+      <button type="button" class="tip-btn" onclick="setTip(30)">30 ₽</button>
+      <button type="button" class="tip-btn" onclick="setTip(40)">40 ₽</button>
+      <button type="button" class="tip-btn" onclick="setTip(50)">50 ₽</button>
+      <button type="button" class="tip-btn" onclick="setTip(0)">Без чаевых</button>
+    </div>
+    <p class="speed-note" id="tip-note">Чаевые: 0 ₽</p>
+    <label class="f-label">Фамилия и имя</label><input type="text" id="f-fio" placeholder="Иванов Иван">
+    <label class="f-label">Номер телефона</label><input type="tel" id="f-phone" placeholder="+7 961 596 55 66">
+    <label class="f-label">Где встретиться (школа — класс, курьер — адрес)</label><input type="text" id="f-address" placeholder="Например: школа №65, после N урока">
+    <label class="f-label">Комментарий (необязательно)</label><textarea id="f-comment" rows="3" placeholder="Например: размер, пожелания"></textarea>
+    <div class="total-box" id="cart-total-box"></div>
+    <button type="button" class="pay-btn" id="cart-pay-btn" onclick="payCart()">Оплатить</button>
+    <p class="speed-note" style="margin-top:10px;">Оплата — после подтверждения заказа: мы свяжемся с тобой по номеру и договоримся (перевод или наличные при встрече). Вопросы? Звони: <a href="tel:+79615965566" style="color:#e65100;font-weight:bold;">+7 961 596 55 66</a></p>
+  </div>
+</section>
+
+<section id="receipt-page" class="page-box">
+  <span class="back-link" onclick="closeReceipt()">← Назад в корзину</span>
+  <h2>🧾 Чек заказа</h2>
+  <p class="section-sub">Сохрани этот экран (скриншот) — он подтверждает заказ</p>
+  <div style="background:#fff;border:2px solid #ccc;border-radius:14px;padding:20px;max-width:600px;margin:0 auto;">
+    <div style="border-bottom:2px dashed #ccc;padding-bottom:12px;margin-bottom:16px;">
+      <div style="font-weight:bold;font-size:1.1rem;">3D МОДЕЛИ — школа №65</div>
+      <div style="color:#888;font-size:.9rem;">Подтверждение заказа <span id="receipt-no"></span></div>
+    </div>
+    <div id="receipt-items" style="margin-bottom:16px;"></div>
+    <div style="display:flex;justify-content:space-between;"><span>Сумма за модели:</span><b id="receipt-total"></b></div>
+    <div id="receipt-promo" style="display:flex;justify-content:space-between;color:#2e7d32;"></div>
+    <div id="receipt-courier" style="display:flex;justify-content:space-between;"></div>
+    <div style="display:flex;justify-content:space-between;color:#888;"><span>Чаевые:</span><b id="receipt-tips"></b></div>
+    <div style="display:flex;justify-content:space-between;border-top:2px dashed #ccc;margin-top:8px;padding-top:10px;"><b>К оплате:</b><b id="receipt-final" style="font-size:1.3rem;color:#e65100;"></b></div>
+    <hr style="border:0;border-top:1px solid #eee;margin:16px 0;">
+    <div style="margin-bottom:12px;"><b>Способ получения:</b><br><span id="receipt-pickup" style="color:#555;"></span></div>
+    <div style="margin-bottom:12px;"><b>Заказчик:</b><br><span id="receipt-customer" style="color:#555;"></span></div>
+    <p style="font-size:.85rem;color:#777;line-height:1.4;">Оплата — после подтверждения: свяжемся по номеру и договоримся (перевод или наличные при встрече). 📞 <a href="tel:+79615965566" style="color:#e65100;font-weight:bold;">+7 961 596 55 66</a></p>
+  </div>
+</section>
+
+<section id="after-order" style="display:none;">
+  <h2>✅ Заказ принят! Что дальше?</h2>
+  <div class="next-step"><div class="n">1</div><p><b>Мы видим твой заказ</b> и связываемся с тобой по номеру телефона — подтверждаем модели, цвета и время встречи.</p></div>
+  <div class="next-step"><div class="n">2</div><p><b>Оплата.</b> Перевод или наличные при встрече — как удобнее.</p></div>
+  <div class="next-step"><div class="n">3</div><p><b>Печатаем.</b> Заказ будет готов <b>до следующего рабочего дня</b>. Заказ в выходные — в первый рабочий день.</p></div>
+  <div class="next-step"><div class="n">4</div><p><b>Получение.</b> У школы №65 (бесплатно) или курьер за 100 ₽.</p></div>
+  <div class="next-step"><div class="n">5</div><p><b>Проверяешь и оставляешь отзыв</b> под своим ником в разделе «Отзывы» 🙂</p></div>
+</section>
+
+<section id="reviews">
+  <h2>Отзывы</h2>
+  <p class="section-sub">Отзывы пишутся под зарегистрированным ником — выдать себя за другого не получится</p>
+  <div class="sort-bar">
+    <button class="sort-btn active" data-star="0" onclick="setStarFilter(0, this)">Все отзывы</button>
+    <button class="sort-btn" data-star="5" onclick="setStarFilter(5, this)">5 ★</button>
+    <button class="sort-btn" data-star="4" onclick="setStarFilter(4, this)">4 ★</button>
+    <button class="sort-btn" data-star="3" onclick="setStarFilter(3, this)">3 ★</button>
+    <button class="sort-btn" data-star="2" onclick="setStarFilter(2, this)">2 ★</button>
+    <button class="sort-btn" data-star="1" onclick="setStarFilter(1, this)">1 ★</button>
+  </div>
+  <div class="reviews" id="reviews-grid"></div>
+  <div class="review-more-wrap" id="reviews-more-wrap"><button class="more-btn" onclick="showMoreReviews()">↓ Показать ещё отзывы</button></div>
+  <div class="review-form">
+    <h3>Оставить отзыв ⭐</h3>
+    <div id="review-auth-hint" class="small-warn">🔐 Чтобы оставить отзыв, <b>войдите или зарегистрируйтесь</b> — кнопка «Войти» наверху. Ник прикрепится к отзыву автоматически.</div>
+    <div id="review-auth-ok" style="display:none;">
+      <div class="nickname-locked" style="margin-bottom:12px;"><span id="review-nick"></span><small>ник закреплён за тобой</small></div>
+      <div class="star-input" id="star-input">
+        <button type="button" onclick="setStars(1)">★</button><button type="button" onclick="setStars(2)">★</button>
+        <button type="button" onclick="setStars(3)">★</button><button type="button" onclick="setStars(4)">★</button>
+        <button type="button" onclick="setStars(5)">★</button>
+      </div>
+      <textarea id="r-text" rows="3" placeholder="Твой отзыв" style="margin-bottom:12px;"></textarea>
+      <button class="pay-btn" style="margin-top:0;" onclick="submitReview()">Отправить отзыв</button>
+    </div>
+    <p class="speed-note" style="margin-top:10px;">Чтобы отзыв увидели все, отправь его текст нам в группу в MAX — мы добавим его на сайт.</p>
+  </div>
+</section>
+
+<section id="faq" class="faq">
+  <h2>Частые вопросы</h2>
+  <details><summary>Сколько печатается модель?</summary><div class="answer">Ориентир: заказ готов <b>до следующего рабочего дня</b>. Заказ в выходные — в первый рабочий день. Обычная скорость — 100% принтера, медленная — 50% (вдвое дольше, качество лучше), быстрая — 200% (вдвое быстрее, детали проще).</div></details>
+  <details><summary>Почему цены разные?</summary><div class="answer">Цена = вес × цена грамма пластика × 3. Белый пластик дешевле, радужный — дороже. Медленная печать +40%, быстрая −20%, курьер +100 ₽ к заказу. Промокоды — до 25%, ищи в группе в MAX!</div></details>
+  <details><summary>Зачем нужна регистрация?</summary><div class="answer">Чтобы отзывы были честными: твой ник закрепляется за тобой при регистрации и <b>не меняется</b>, а вход защищён паролем — зная один ник, в чужой аккаунт не войти. Аккаунт хранится в этом браузере на этом устройстве.</div></details>
+  <details><summary>Можно заказать свой дизайн?</summary><div class="answer">Да! Пролистай до вкладки «Предложить модель» — напиши идею, обсудим.</div></details>
+  <details><summary>Что если модель сломается?</summary><div class="answer">Если брак с нашей стороны — заменим или вернём деньги. Без споров.</div></details>
+</section>
+
+<section id="suggest">
+  <h2>💡 Предложить модель</h2>
+  <p class="section-sub">Нет нужной модели в каталоге? Расскажи, что хочешь — напечатаем!</p>
+  <div class="suggest-ideas">
+    <div class="idea-card"><h3>🖼 Картинка или фото</h3><p>Пришли изображение — найдём похожую модель и напечатаем.</p></div>
+    <div class="idea-card"><h3>✏️ Свой эскиз</h3><p>Нарисовал от руки? Покажи — обсудим размеры и цену.</p></div>
+    <div class="idea-card"><h3>📦 Любую вещь</h3><p>Подставка, держатель, брелок — опиши словами, остальное сделаем мы.</p></div>
+  </div>
+  <div class="suggest-form">
+    <h3>Твоя идея 🚀</h3>
+    <input type="text" id="s-title" placeholder="Название идеи" style="margin-bottom:12px;">
+    <textarea id="s-desc" rows="4" placeholder="Описание: что это, для чего, размер и цвет" style="margin-bottom:12px;"></textarea>
+    <input type="text" id="s-name" placeholder="Твоё имя" style="margin-bottom:12px;">
+    <input type="tel" id="s-phone" placeholder="Телефон для связи" style="margin-bottom:12px;">
+    <button class="pay-btn" style="margin-top:0;" onclick="submitSuggestion()">Отправить идею</button>
+    <p class="speed-note" style="margin-top:10px;">Идея сохранится, а чтобы мы точно её увидели — продублируй в группу в MAX.</p>
+  </div>
+</section>
+
+<section id="after-suggest" style="display:none;">
+  <h2>🚀 Идея отправлена! Что дальше?</h2>
+  <div class="next-step"><div class="n">1</div><p><b>Мы посмотрим идею</b> и решим, можем ли её напечатать.</p></div>
+  <div class="next-step"><div class="n">2</div><p><b>Свяжемся с тобой</b> — обсудим детали, размер и цвет.</p></div>
+  <div class="next-step"><div class="n">3</div><p><b>Назовём цену</b> — по тем же правилам: вес × пластик × скорость.</p></div>
+  <div class="next-step"><div class="n">4</div><p><b>Печатаем и отдаём</b> — у школы №65 или курьером.</p></div>
+</section>
+
+<section id="about" class="about">
+  <h2>О нас</h2>
+  <p>Мы — небольшая команда из школы №65, которая влюблена в 3D-печать. Каждая модель — результат ручной работы: сами подбираем, сами печатаем и сами проверяем каждую перед передачей.</p>
+  <p>Печать ведём на качественном пластике — белом или радужном. Нужна фигурка, аксессуар или что-то своё? Пришли идею через вкладку «Предложить модель».</p>
+  <p>Работаем просто: регистрируйся с паролем, набирай корзину, забирай у школы №65 или вызывай курьера. Промокоды и новости — в нашей группе в MAX.</p>
+  <div class="features">
+    <div class="feature"><h3>🎨 Честная цена</h3><p>Цена считается по граммам: видишь, из чего складывается сумма.</p></div>
+    <div class="feature"><h3>👤 Ник в отзывах</h3><p>Регистрируйся — и твой ник закрепится за тобой навсегда.</p></div>
+    <div class="feature"><h3>🔐 Пароль</h3><p>Вход защищён паролем — зная один ник, чужой аккаунт не открыть.</p></div>
+    <div class="feature"><h3>🛒 Корзина</h3><p>Набирай несколько моделей сразу — всё в одном заказе.</p></div>
+    <div class="feature"><h3>🎟️ Промокоды</h3><p>Скидки до 25% — следи за промокодами в группе в MAX.</p></div>
+    <div class="feature"><h3>🛡️ Гарантия</h3><p>Если модель с браком — заменим или вернём деньги.</p></div>
+  </div>
+</section>
+
+<section id="contacts">
+  <h2>Контакты — свяжись с нами</h2>
+  <p style="text-align:center;font-size:1.2rem;">
+    Телефон: <a href="tel:+79615965566" style="color:#e65100;font-weight:bold;">+7 961 596 55 66</a><br><br>
+    Школа №65 — забрать модель можно прямо у школы 🎒<br><br>
+    Группа в MAX: <a href="https://max.ru/join/Wza9NxAlynErloEqHFd30Bj4kgLXc-_XqNQD0vYl_Rk" style="color:#e65100;font-weight:bold;">нажми, чтобы вступить</a>
+  </p>
+</section>
+
+<footer>🖨 3D МОДЕЛИ — печатаем модели, которые хочется держать в руках.<br>Школа №65 · <a href="tel:+79615965566">+7 961 596 55 66</a></footer>
+
+<a class="call-fab" href="tel:+79615965566">📞</a>
+
+<!-- ===== МОДАЛКА ВХОДА / РЕГИСТРАЦИИ ===== -->
+<div class="modal" id="auth-modal" onclick="if(event.target===this)closeAuth()">
+  <div class="modal-box">
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tab-login" onclick="switchAuthTab('login')">Войти</button>
+      <button class="modal-tab" id="tab-reg" onclick="switchAuthTab('reg')">Регистрация</button>
+    </div>
+
+    <!-- ВХОД -->
+    <div id="auth-login">
+      <h3>Вход 👋</h3>
+      <p class="modal-sub">Введи ник и пароль, которые указал при регистрации на этом устройстве.</p>
+      <label class="f-label">Ник</label><input type="text" id="login-nick" placeholder="Твой ник">
+      <label class="f-label">Пароль</label><input type="password" id="login-pass" placeholder="Твой пароль">
+      <div class="err" id="login-err"></div>
+      <div class="modal-actions"><button class="btn" onclick="doLogin()">Войти</button><button class="btn btn-secondary" onclick="closeAuth()">Отмена</button></div>
+    </div>
+
+    <!-- РЕГИСТРАЦИЯ -->
+    <div id="auth-reg" style="display:none;">
+      <h3>Регистрация 🎉</h3>
+      <p class="modal-sub">Ник выбирается один раз и <b>не меняется никогда</b>. Пароль защищает твой аккаунт — зная один ник, в чужой профиль не войти.</p>
+      <label class="f-label">Ник (уникальный, навсегда)</label><input type="text" id="reg-nick" placeholder="Например: PrinterMaster">
+      <label class="f-label">Телефон</label><input type="tel" id="reg-phone" placeholder="+7 961 596 55 66">
+      <label class="f-label">Почта</label><input type="email" id="reg-email" placeholder="ivan@mail.ru">
+      <label class="f-label">Пароль (минимум 4 символа)</label><input type="password" id="reg-pass" placeholder="Придумай пароль">
+      <label class="f-label">Повтори пароль</label><input type="password" id="reg-pass2" placeholder="Ещё раз">
+      <div class="err" id="reg-err"></div>
+      <div class="modal-actions"><button class="btn" onclick="doRegister()">Создать аккаунт</button><button class="btn btn-secondary" onclick="closeAuth()">Отмена</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================================
+//  ⚙️ НАСТРОЙКИ — ВСЁ, ЧТО МЕНЯЕТСЯ, ЛЕЖИТ ЗДЕСЬ (БОЛЬШОЙ БЛОК)
+// =====================================================================
+const COLORS = [
+  { name: "Белый",    rate: 0.6, note: "Классика — самый дешёвый вариант" },
+  { name: "Радужный", rate: 2,   note: "Переливается всеми цветами — дорого, но эффектно" }
+];
+const PRICE_MULTIPLIER = 3;
+const SPEEDS = [
+  { name: "Медленно", adj: 0.40,  note: "50% скорости, вдвое дольше, максимальная детализация — +40%" },
+  { name: "Обычная",  adj: 0,     note: "100% скорости — стандарт, без изменений" },
+  { name: "Быстрая",  adj: -0.20, note: "200% скорости, вдвое быстрее, детали проще — −20%" }
+];
+const PROMOCODES = [{ code: "3Dpromo", percent: 25 }];
+const COURIER_PRICE = 100;
+const TIPS = [10, 20, 30, 40, 50];
+const SMALL_MODEL_GRAMS = 40;
+const MIN_PRICE = 10;
+const soldBase = 100;
+
+// ---------- СЮДА ПИСАТЬ МОДЕЛИ 👇 ----------
+const products = [
+  { title: "Раздвижное яйцо",     weight: 140, photo: "egg.jpg",       desc: "", discount: 17, sales: 0 },
+  { title: "Катана",              weight: 100, photo: "katana.jpg",    desc: "", sales: 0 },
+  { title: "Волчок",              weight: 40,  photo: "top.jpg",       desc: "", sales: 0 },
+  { title: "Свисток",             weight: 10,  photo: "whistle.jpg",   desc: "", sales: 0 },
+  { title: "Звёздочка",           weight: 30,  photo: "star.jpg",      desc: "", sales: 0 },
+  { title: "Ёлочка",              weight: 25,  photo: "tree.jpg",      desc: "", sales: 0 },
+  { title: "Бесконечный куб",     weight: 35,  photo: "infcube.jpg",   desc: "", sales: 0 },
+  { title: "Куб-антистресс",      weight: 30,  photo: "cube.jpg",      desc: "", sales: 0 },
+  { title: "Ось",                 weight: 25,  photo: "axis.jpg",      desc: "", sales: 0 },
+  { title: "Пружинное яйцо",      weight: 15,  photo: "springegg.jpg", desc: "", sales: 0 },
+  { title: "Снеговик-брелок",     weight: 10,  photo: "snowkey.jpg",   desc: "", sales: 0 },
+  { title: "Снеговик с тыквой",   weight: 10,  photo: "snowpump.jpg",  desc: "", sales: 0 },
+  { title: "Снеговик без тыквы",  weight: 10,  photo: "snowplain.jpg", desc: "", sales: 0 }
+];
+// ---------- СЮДА ПИСАТЬ ОТЗЫВЫ 👇 (stars: 1-5 или null для заготовки) ----------
+const baseReviews = [
+  { stars: null, name: "Здесь будет твой отзыв", text: "Купил модель? Войди и напиши пару слов — как прошла печать." },
+  { stars: null, name: "Здесь будет твой отзыв", text: "Купил модель? Войди и напиши пару слов — как прошла печать." }
+];
+
+// =====================================================================
+//  ЛОГИКА — НЕ ТРОГАЙ, ЕСЛИ НЕ УВЕРЕН
+// =====================================================================
+const fmt = n => n.toLocaleString("ru-RU");
+const fmtRate = n => String(n).replace(".", ",");
+
+// ---------- РАСЧЁТ ЦЕНЫ ----------
+function calcPrice(p, colorName, speedName) {
+  const color = COLORS.find(c => c.name === colorName) || COLORS[0];
+  const speed = SPEEDS.find(s => s.name === speedName) || SPEEDS[1];
+  const raw = Math.round(p.weight * color.rate * PRICE_MULTIPLIER);
+  const withSpeed = Math.max(MIN_PRICE, Math.round(raw * (1 + speed.adj)));
+  return p.discount ? Math.round(withSpeed * (1 - p.discount / 100)) : withSpeed;
+}
+function basePrice(p) { return calcPrice(p, COLORS[0].name, "Обычная"); }
+function oldPriceOf(p) {
+  if (!p.discount) return null;
+  return Math.round(Math.round(p.weight * COLORS[0].rate * PRICE_MULTIPLIER) / (1 - p.discount / 100));
+}
+function priceRowHTML(p) {
+  const old = oldPriceOf(p);
+  return (old ? '<span class="old-price">' + fmt(old) + ' ₽</span> ' : '') +
+         '<span class="price">' + fmt(basePrice(p)) + ' ₽</span>' +
+         (old ? ' <span class="discount">скидка −' + p.discount + '%</span>' : "");
+}
+
+// ---------- ПОИСК С ТЕРПИМОСТЬЮ К ОПЕЧАТКАМ ----------
+function norm(s) { return (s || "").toLowerCase().replace(/ё/g, "е").trim(); }
+function lev(a, b) {
+  const m = a.length, n = b.length;
+  const d = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) d[i][0] = i;
+  for (let j = 0; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++)
+    for (let j = 1; j <= n; j++)
+      d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+  return d[m][n];
+}
+function fuzzyMatch(name, query) {
+  const n = norm(name), q = norm(query);
+  if (!q) return true;
+  if (n.includes(q)) return true;
+  const qW = q.split(/\s+/).filter(Boolean), nW = n.split(/\s+/).filter(Boolean);
+  return qW.some(t => nW.some(w => t.length <= 3 ? w.startsWith(t) : lev(w, t) <= Math.max(1, Math.floor(t.length / 4))));
+}
+
+// ---------- КАТАЛОГ ----------
+let sortMode = "default", visibleCount = 5;
+const BATCH = 5;
+function getSortedProducts() {
+  const q = document.getElementById("catalog-search")?.value || "";
+  let arr = products.filter(p => fuzzyMatch(p.title, q));
+  if (sortMode === "hits") arr.sort((a, b) => (b.sales || 0) - (a.sales || 0));
+  if (sortMode === "new") arr.reverse();
+  return arr;
+}
+function renderCatalog() {
+  const grid = document.getElementById("catalog-grid");
+  grid.innerHTML = "";
+  const arr = getSortedProducts();
+  if (arr.length === 0) {
+    grid.innerHTML = '<p class="no-results">Ничего не нашлось 🤷 Попробуй другое название или <a href="#suggest" style="color:#e65100;font-weight:bold;">предложи свою модель</a>!</p>';
+    document.getElementById("more-catalog").style.display = "none";
+    document.getElementById("catalog-counter").textContent = "";
+    return;
+  }
+  const shown = arr.slice(0, visibleCount);
+  shown.forEach((p, i) => {
+    const card = document.createElement("div");
+    card.className = "card" + (i === shown.length - 1 && visibleCount < arr.length ? " dim" : "");
+    card.onclick = () => openModel(p.title);
+    card.innerHTML =
+      (p.discount ? '<div class="badge sale">СКИДКА</div>' : (p.sales >= 3 ? '<div class="badge">ХИТ</div>' : "")) +
+      '<div class="photo" style="background-image:url(\'' + p.photo + '\')"></div>' +
+      '<div class="info"><h3>' + p.title + '</h3>' +
+      '<div class="weight">⚖️ ' + p.weight + ' г</div>' +
+      '<div class="price-row">' + priceRowHTML(p) + '</div>' +
+      '<div class="price-note">за белый пластик · обычная скорость</div>' +
+      '<button class="btn" onclick="event.stopPropagation(); openOrder(\'' + p.title.replace(/'/g, "\\'") + '\')">Купить</button></div>';
+    grid.appendChild(card);
+  });
+  document.getElementById("catalog-counter").textContent = "Показано " + Math.min(visibleCount, arr.length) + " из " + arr.length;
+  const btn = document.getElementById("more-catalog");
+  btn.style.display = visibleCount >= arr.length ? "none" : "inline-block";
+  btn.textContent = "↓ Показать ещё " + Math.min(BATCH, arr.length - visibleCount);
+}
+function setSort(mode, btn) {
+  sortMode = mode; visibleCount = BATCH;
+  document.querySelectorAll("[data-sort]").forEach(b => b.classList.toggle("active", b === btn));
+  renderCatalog();
+}
+function showMoreCatalog() {
+  visibleCount = Math.min(visibleCount + BATCH, getSortedProducts().length);
+  renderCatalog();
+}
+
+// ---------- СТРАНИЦА МОДЕЛИ ----------
+let currentModel = null;
+function openModel(title) {
+  const p = products.find(x => x.title === title);
+  if (!p) return;
+  currentModel = p;
+  document.getElementById("model-title").textContent = p.title;
+  document.getElementById("model-photo").style.backgroundImage = "url('" + p.photo + "')";
+  document.getElementById("model-price-row").innerHTML = priceRowHTML(p);
+  document.getElementById("model-weight").textContent = "⚖️ Вес: " + p.weight + " г";
+  document.getElementById("model-desc").textContent = p.desc || "Описание скоро появится — спроси детали по номеру ниже.";
+  document.getElementById("model-small-warn").style.display = p.weight <= SMALL_MODEL_GRAMS ? "block" : "none";
+  document.getElementById("model-buy-btn").onclick = () => openOrder(p.title);
+  hideAllPages();
+  document.getElementById("model-page").style.display = "block";
+  document.getElementById("model-page").scrollIntoView({ behavior: "smooth" });
+}
+function closeModel() {
+  document.getElementById("model-page").style.display = "none";
+  document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
+}
+function hideAllPages() {
+  ["model-page", "order-page", "cart-page", "receipt-page"].forEach(id => document.getElementById(id).style.display = "none");
+}
+
+// ---------- БЛОКИ ВЫБОРА ----------
+function buildChoiceBlocks() {
+  document.getElementById("color-block").innerHTML = COLORS.map((c, i) =>
+    '<label class="speed-variant"><input type="radio" name="color" value="' + c.name + '"' + (i === 0 ? " checked" : "") +
+    ' onchange="updateTotal()"> <b>' + c.name + ' — ' + fmtRate(c.rate) + ' ₽ за грамм</b><small>' + c.note + '</small></label>').join("");
+  document.getElementById("speed-block").innerHTML = SPEEDS.map(s => {
+    const pct = Math.round(Math.abs(s.adj) * 100);
+    const label = s.adj > 0 ? "+" + pct + "%" : s.adj < 0 ? "−" + pct + "%" : "без изменений";
+    return '<label class="speed-variant"><input type="radio" name="speed" value="' + s.name + '"' +
+      (s.name === "Обычная" ? " checked" : "") + ' onchange="updateTotal()"> <b>' + s.name + ' (' + label + ')</b><small>' + s.note + '</small></label>';
+  }).join("");
+}
+function updateTotal() {
+  const p = currentModel, box = document.getElementById("total-box"), warn = document.getElementById("fast-warn");
+  if (!p) { box.style.display = "none"; return; }
+  const colorName = document.querySelector('input[name="color"]:checked')?.value || COLORS[0].name;
+  const speedName = document.querySelector('input[name="speed"]:checked')?.value || "Обычная";
+  const color = COLORS.find(c => c.name === colorName), speed = SPEEDS.find(s => s.name === speedName);
+  const plasticCost = Math.round(p.weight * color.rate * PRICE_MULTIPLIER);
+  const withSpeed = Math.max(MIN_PRICE, Math.round(plasticCost * (1 + speed.adj)));
+  const total = calcPrice(p, colorName, speedName), diff = withSpeed - plasticCost;
+  warn.classList.toggle("show", p.weight <= SMALL_MODEL_GRAMS && speed.name === "Быстрая");
+  box.style.display = "block";
+  box.innerHTML =
+    '<div class="line"><span>Модель: ' + p.title + ' (' + p.weight + ' г)</span><span></span></div>' +
+    '<div class="line"><span>Пластик: ' + color.name + ' — ' + p.weight + ' г × ' + fmtRate(color.rate) + ' ₽/г × ' + PRICE_MULTIPLIER + '</span><span>' + fmt(plasticCost) + ' ₽</span></div>' +
+    '<div class="line"><span>Скорость: ' + speed.name + '</span><span>' + (diff > 0 ? "+" : diff < 0 ? "−" : "") + (diff !== 0 ? fmt(Math.abs(diff)) + " ₽" : "0 ₽") + '</span></div>' +
+    (p.discount ? '<div class="line"><span>Скидка на модель: −' + p.discount + '%</span><span style="color:#d32f2f;">−' + fmt(withSpeed - total) + ' ₽</span></div>' : "") +
+    '<div class="line total"><span>Цена этой модели:</span><span style="color:#e65100;">' + fmt(total) + ' ₽</span></div>';
+}
+
+// ---------- ЗАКАЗ ----------
+function openOrder(title) {
+  currentModel = products.find(x => x.title === title);
+  document.getElementById("order-product-name").textContent = "Модель: " + title;
+  hideAllPages();
+  document.getElementById("order-page").style.display = "block";
+  const c0 = document.querySelector('input[name="color"]');
+  const s0 = [...document.querySelectorAll('input[name="speed"]')].find(r => r.value === "Обычная");
+  if (c0) c0.checked = true;
+  if (s0) s0.checked = true;
+  document.getElementById("order-page").scrollIntoView({ behavior: "smooth" });
+  updateTotal();
+}
+document.getElementById("order-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+  if (!currentModel) return;
+  const colorName = document.querySelector('input[name="color"]:checked')?.value || COLORS[0].name;
+  const speedName = document.querySelector('input[name="speed"]:checked')?.value || "Обычная";
+  cart.push({ title: currentModel.title, color: colorName, speed: speedName });
+  updateCartCount();
+  openCart();
+  alert("🛒 Добавлено в корзину! Можно набрать ещё моделей.");
+});
+
+// ---------- КОРЗИНА ----------
+let cart = [], promoApplied = false, tipAmount = 0;
+function updateCartCount() {
+  const el = document.getElementById("cart-count");
+  el.textContent = cart.length;
+  el.style.display = cart.length ? "inline-block" : "none";
+}
+function openCart() {
+  hideAllPages();
+  document.getElementById("cart-page").style.display = "block";
+  renderCart();
+  document.getElementById("cart-page").scrollIntoView({ behavior: "smooth" });
+}
+function closeCart() {
+  document.getElementById("cart-page").style.display = "none";
+  document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
+}
+function removeFromCart(i) { cart.splice(i, 1); updateCartCount(); renderCart(); }
+function setTip(amount) {
+  tipAmount = amount;
+  document.getElementById("tip-note").textContent = "Чаевые: " + amount + " ₽";
+  document.querySelectorAll(".tip-btn").forEach(b => {
+    const isZero = b.textContent === "Без чаевых";
+    b.classList.toggle("active", isZero ? amount === 0 : b.textContent === amount + " ₽");
+  });
+  updateCart();
+}
+function applyPromoBtn() {
+  const val = document.getElementById("promo-input").value.trim();
+  const found = PROMOCODES.find(p => p.code.toLowerCase() === val.toLowerCase());
+  const status = document.getElementById("promo-status");
+  if (found) {
+    promoApplied = true;
+    status.textContent = "✅ Промокод применён: скидка −" + found.percent + "% на весь заказ!";
+    status.className = "promo-status ok";
+  } else {
+    promoApplied = false;
+    status.textContent = val ? "❌ Такой промокод не найден. Проверь написание или спроси в группе в MAX." : "";
+    status.className = "promo-status bad";
+  }
+  updateCart();
+}
+function activePromo() {
+  const val = document.getElementById("promo-input")?.value.trim() || "";
+  return PROMOCODES.find(p => p.code.toLowerCase() === val.toLowerCase()) || (promoApplied ? PROMOCODES[0] : null);
+}
+function renderCart() {
+  const wrap = document.getElementById("cart-items"), checkout = document.getElementById("cart-checkout");
+  if (cart.length === 0) {
+    wrap.innerHTML = '<p class="cart-empty">Корзина пуста 🛒<br>Выбери модель в каталоге и добавь её — можно несколько сразу!</p>';
+    checkout.style.display = "none";
+    return;
+  }
+  checkout.style.display = "block";
+  wrap.innerHTML = cart.map((it, i) => {
+    const p = products.find(x => x.title === it.title);
+    const price = p ? calcPrice(p, it.color, it.speed) : 0;
+    return '<div class="cart-item"><div class="ci-info"><b>' + it.title + '</b><small>' +
+      (p ? p.weight + " г · " : "") + it.color + ' пластик · ' + it.speed + '</small></div>' +
+      '<span class="ci-price">' + fmt(price) + ' ₽</span>' +
+      '<button type="button" class="ci-del" onclick="removeFromCart(' + i + ')">✕</button></div>';
+  }).join("");
+  updateCart();
+}
+function updateCart() {
+  if (cart.length === 0) return;
+  const box = document.getElementById("cart-total-box"), payBtn = document.getElementById("cart-pay-btn");
+  let subtotal = 0;
+  const lines = cart.map(it => {
+    const p = products.find(x => x.title === it.title);
+    const price = p ? calcPrice(p, it.color, it.speed) : 0;
+    subtotal += price;
+    return '<div class="line"><span>' + it.title + ' (' + it.color + ', ' + it.speed + ')</span><span>' + fmt(price) + ' ₽</span></div>';
+  }).join("");
+  const promo = activePromo();
+  let afterPromo = subtotal, promoLine = "";
+  if (promo) {
+    const disc = Math.round(subtotal * promo.percent / 100);
+    afterPromo = subtotal - disc;
+    promoLine = '<div class="line"><span>Промокод ' + promo.code + ': −' + promo.percent + '%</span><span style="color:#2e7d32;">−' + fmt(disc) + ' ₽</span></div>';
+  }
+  const pickup = document.querySelector('input[name="pickup"]:checked')?.value || "";
+  const isCourier = pickup.includes("Курьер");
+  const total = afterPromo + (isCourier ? COURIER_PRICE : 0) + tipAmount;
+  box.innerHTML = lines +
+    '<div class="line"><span>Сумма за модели</span><span>' + fmt(subtotal) + ' ₽</span></div>' +
+    promoLine +
+    '<div class="line"><span>' + (isCourier ? "Курьер (рядом со школой №65)" : "Заберу у школы №65") + '</span><span>' + (isCourier ? "+" + fmt(COURIER_PRICE) : "0") + ' ₽</span></div>' +
+    '<div class="line"><span>Чаевые</span><span>+' + fmt(tipAmount) + ' ₽</span></div>' +
+    '<div class="line total"><span>Итого к оплате:</span><span style="color:#e65100;">' + fmt(total) + ' ₽</span></div>';
+  payBtn.textContent = "Оплатить · " + fmt(total) + " ₽";
+}
+
+// ---------- ОПЛАТА → ЧЕК ----------
+function payCart() {
+  const fio = document.getElementById("f-fio").value.trim();
+  const phone = document.getElementById("f-phone").value.trim();
+  if (!fio || !phone) { alert("Заполни имя и номер телефона — иначе мы не сможем связаться с тобой!"); return; }
+  let subtotal = 0;
+  const itemsHtml = cart.map(it => {
+    const p = products.find(x => x.title === it.title);
+    const price = p ? calcPrice(p, it.color, it.speed) : 0;
+    subtotal += price;
+    return '<div style="display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:6px 0;"><span>' + it.title + ' (' + it.color + ', ' + it.speed + ')</span><b>' + fmt(price) + ' ₽</b></div>';
+  }).join("");
+  const promo = activePromo();
+  const disc = promo ? Math.round(subtotal * promo.percent / 100) : 0;
+  const pickup = document.querySelector('input[name="pickup"]:checked')?.value || "";
+  const isCourier = pickup.includes("Курьер");
+  const total = subtotal - disc + (isCourier ? COURIER_PRICE : 0) + tipAmount;
+  const no = "3D-" + Date.now().toString().slice(-6);
+  document.getElementById("receipt-items").innerHTML = itemsHtml;
+  document.getElementById("receipt-total").textContent = fmt(subtotal) + " ₽";
+  document.getElementById("receipt-promo").innerHTML = promo ? "<span>Промокод " + promo.code + ":</span><b>−" + fmt(disc) + " ₽</b>" : "";
+  document.getElementById("receipt-courier").innerHTML = "<span>Доставка:</span><b>" + (isCourier ? "+" + fmt(COURIER_PRICE) + " ₽" : "самовывоз") + "</b>";
+  document.getElementById("receipt-tips").textContent = tipAmount + " ₽";
+  document.getElementById("receipt-final").textContent = fmt(total) + " ₽";
+  document.getElementById("receipt-pickup").textContent = pickup;
+  document.getElementById("receipt-customer").textContent = fio + " · " + phone + (getCurrentUser() ? " · ник: " + getCurrentUser().nick : "");
+  document.getElementById("receipt-no").textContent = "№ " + no;
+  hideAllPages();
+  document.getElementById("receipt-page").style.display = "block";
+  cart = []; promoApplied = false; tipAmount = 0;
+  document.getElementById("promo-input").value = "";
+  document.getElementById("promo-status").textContent = "";
+  document.getElementById("tip-note").textContent = "Чаевые: 0 ₽";
+  document.querySelectorAll(".tip-btn").forEach(b => b.classList.remove("active"));
+  updateCartCount();
+  document.getElementById("receipt-page").scrollIntoView({ behavior: "smooth" });
+}
+function closeReceipt() {
+  document.getElementById("receipt-page").style.display = "none";
+  document.getElementById("cart-page").style.display = "block";
+  renderCart();
+}
+
+// ---------- РЕГИСТРАЦИЯ И ВХОД (С ПАРОЛЕМ) ----------
+function getAccounts() { try { return JSON.parse(localStorage.getItem("acc_db") || "{}"); } catch (e) { return {}; } }
+function saveAccounts(a) { localStorage.setItem("acc_db", JSON.stringify(a)); }
+function getCurrentUser() { try { return JSON.parse(localStorage.getItem("acc_current") || "null"); } catch (e) { return null; } }
+function setCurrentUser(u) { if (u) localStorage.setItem("acc_current", JSON.stringify(u)); else localStorage.removeItem("acc_current"); }
+
+// Простой хеш: пароль не хранится открытым текстом
+function hashPass(s) {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+  return "h" + h.toString(16);
+}
+
+function openAuth() { document.getElementById("auth-modal").classList.add("open"); switchAuthTab(getCurrentUser() ? "login" : "reg"); }
+function closeAuth() { document.getElementById("auth-modal").classList.remove("open"); }
+function switchAuthTab(t) {
+  document.getElementById("tab-login").classList.toggle("active", t === "login");
+  document.getElementById("tab-reg").classList.toggle("active", t === "reg");
+  document.getElementById("auth-login").style.display = t === "login" ? "block" : "none";
+  document.getElementById("auth-reg").style.display = t === "reg" ? "block" : "none";
+}
+function validNick(n) { return /^[A-Za-zА-Яа-яЁё0-9_\- ]{3,20}$/.test(n); }
+function doRegister() {
+  const nick  = document.getElementById("reg-nick").value.trim();
+  const phone = document.getElementById("reg-phone").value.trim();
+  const email = document.getElementById("reg-email").value.trim();
+  const p1 = document.getElementById("reg-pass").value;
+  const p2 = document.getElementById("reg-pass2").value;
+  const err = document.getElementById("reg-err");
+  if (!validNick(nick)) { err.textContent = "Ник: 3–20 символов, буквы/цифры/пробел/_/-"; return; }
+  if (!/^[\d\s+()-]{10,18}$/.test(phone)) { err.textContent = "Проверь номер телефона."; return; }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { err.textContent = "Проверь почту — что-то не так с адресом."; return; }
+  if (p1.length < 4) { err.textContent = "Пароль — минимум 4 символа."; return; }
+  if (p1 !== p2) { err.textContent = "Пароли не совпадают."; return; }
+  const accs = getAccounts();
+  const key = norm(nick);
+  if (accs[key]) { err.textContent = "Ник «" + nick + "» уже занят — придумай другой."; return; }
+  accs[key] = { nick, phone, email, pass: hashPass(p1), created: new Date().toLocaleDateString("ru-RU") };
+  saveAccounts(accs);
+  setCurrentUser(accs[key]);
+  updateAuthUI();
+  closeAuth();
+  alert("🎉 Аккаунт создан! Ник «" + nick + "» закреплён за тобой, а пароль — твой пропуск. Не теряй его!");
+}
+function doLogin() {
+  const nick = document.getElementById("login-nick").value.trim();
+  const pass = document.getElementById("login-pass").value;
+  const err  = document.getElementById("login-err");
+  const acc = getAccounts()[norm(nick)];
+  if (!acc) { err.textContent = "Такой ник не зарегистрирован на этом устройстве."; return; }
+  if (!pass) { err.textContent = "Введи пароль."; return; }
+  if (acc.pass !== hashPass(pass)) { err.textContent = "❌ Неверный пароль."; return; }
+  setCurrentUser(acc);
+  updateAuthUI();
+  closeAuth();
+  alert("С возвращением, " + acc.nick + "! 👋");
+}
+function logout() {
+  setCurrentUser(null);
+  updateAuthUI();
+  alert("Вышел из аккаунта. До встречи!");
+}
+function updateAuthUI() {
+  const user = getCurrentUser();
+  document.getElementById("auth-user-label").style.display = user ? "inline" : "none";
+  document.getElementById("auth-user-label").textContent = user ? "👤 " + user.nick : "";
+  document.getElementById("auth-btn").textContent = user ? "Аккаунт" : "Войти";
+  document.getElementById("auth-out").style.display = user ? "inline-block" : "none";
+  const hint = document.getElementById("review-auth-hint");
+  const ok = document.getElementById("review-auth-ok");
+  if (user) {
+    hint.style.display = "none";
+    ok.style.display = "block";
+    document.getElementById("review-nick").textContent = user.nick;
+  } else {
+    hint.style.display = "block";
+    ok.style.display = "none";
+  }
+}
+
+// ---------- ОТЗЫВЫ ----------
+let starFilter = 0, visibleReviews = 5;
+const REVIEW_BATCH = 5;
+function getMyReviews() { try { return JSON.parse(localStorage.getItem("my_reviews") || "[]"); } catch (e) { return []; } }
+function getAllReviews() { return getMyReviews().concat(baseReviews); }
+function renderReviews() {
+  const grid = document.getElementById("reviews-grid");
+  grid.innerHTML = "";
+  const all = getAllReviews().filter(r => starFilter === 0 || r.stars === starFilter);
+  const shown = all.slice(0, visibleReviews);
+  if (all.length === 0) grid.innerHTML = '<p class="no-results">Пока нет отзывов с такой оценкой — будь первым!</p>';
+  shown.forEach(r => {
+    const div = document.createElement("div");
+    div.className = "review";
+    const starsHtml = r.stars == null ? '<div class="stars empty">☆☆☆☆☆</div>' : '<div class="stars">' + "★".repeat(r.stars) + "☆".repeat(5 - r.stars) + '</div>';
+    div.innerHTML = starsHtml + '<div class="text">«' + r.text + '»</div><div class="author">— ' + r.name + '</div>';
+    grid.appendChild(div);
+  });
+  document.getElementById("reviews-more-wrap").style.display = visibleReviews >= all.length ? "none" : "block";
+}
+function setStarFilter(n, btn) {
+  starFilter = n; visibleReviews = REVIEW_BATCH;
+  document.querySelectorAll("[data-star]").forEach(b => b.classList.toggle("active", b === btn));
+  renderReviews();
+}
+function showMoreReviews() { visibleReviews += REVIEW_BATCH; renderReviews(); }
+let chosenStars = 0;
+function setStars(n) {
+  chosenStars = n;
+  document.querySelectorAll("#star-input button").forEach((b, i) => b.classList.toggle("on", i < n));
+}
+function submitReview() {
+  const user = getCurrentUser();
+  if (!user) { alert("Сначала войди в аккаунт — кнопка «Войти» наверху."); return; }
+  const text = document.getElementById("r-text").value.trim();
+  if (!text || chosenStars === 0) { alert("Поставь звёзды и напиши отзыв!"); return; }
+  const newReview = { stars: chosenStars, name: user.nick, text };
+  const idx = baseReviews.findIndex(r => r.stars == null);
+  if (idx !== -1) baseReviews.splice(idx, 1);
+  const mine = getMyReviews();
+  mine.unshift(newReview);
+  localStorage.setItem("my_reviews", JSON.stringify(mine));
+  document.getElementById("r-text").value = "";
+  setStars(0);
+  setStarFilter(0, document.querySelector('[data-star="0"]'));
+  alert("Спасибо за отзыв, " + user.nick + "! ⭐ Не забудь прислать его в группу в MAX.");
+}
+
+// ---------- ПРЕДЛОЖИТЬ МОДЕЛЬ ----------
+function submitSuggestion() {
+  const title = document.getElementById("s-title").value.trim();
+  const desc = document.getElementById("s-desc").value.trim();
+  const name = document.getElementById("s-name").value.trim();
+  const phone = document.getElementById("s-phone").value.trim();
+  if (!title || !desc || !name || !phone) { alert("Заполни все поля — так мы быстрее поймём, что напечатать!"); return; }
+  let ideas = [];
+  try { ideas = JSON.parse(localStorage.getItem("my_ideas") || "[]"); } catch (e) {}
+  ideas.unshift({ title, desc, name, phone, date: new Date().toLocaleDateString("ru-RU") });
+  localStorage.setItem("my_ideas", JSON.stringify(ideas));
+  ["s-title", "s-desc", "s-name", "s-phone"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("after-suggest").style.display = "block";
+  document.getElementById("after-suggest").scrollIntoView({ behavior: "smooth" });
+  alert("Спасибо за идею! 🚀 Продублируй её в группу в MAX.");
+}
+
+// ---------- СЧЁТЧИК ----------
+function updateSoldStat() {
+  const total = soldBase + products.reduce((s, p) => s + (p.sales || 0), 0);
+  document.querySelector("#sold-stat b").textContent = total + "+";
+}
+
+// ---------- СТАРТ ----------
+buildChoiceBlocks();
+updateSoldStat();
+updateCartCount();
+updateAuthUI();
+renderCatalog();
+renderReviews();
+</script>
+
+</body>
+</html>
