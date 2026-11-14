@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "type": "prod",
+    "name": "Синий куб",
+    "price": 500,
+    "image": "https://via.placeholder.com/200?text=Cube",
+    "sold": false,
+    "msg": ""
+  },
+  {
+    "id": 2,
+    "type": "prod",
+    "name": "Драконье яйцо",
+    "price": 250,
+    "image": "https://via.placeholder.com/200?text=Egg",
+    "sold": false,
+    "msg": ""
+  },
+  {
+    "id": 3,
+    "type": "chat",
+    "name": "",
+    "price": 0,
+    "image": "",
+    "sold": false,
+    "msg": "Привет! Это тестовое сообщение в чате."
+  }
+]
